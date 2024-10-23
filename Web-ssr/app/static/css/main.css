@@ -1,0 +1,251 @@
+:root {
+    --bg: #fcfeff; 
+    --card-bg: #ffffff; 
+    --card-border-color: #d1d5db; 
+    --color: #1f2937; 
+    --header-bg: #2684E6; 
+    --header-color: #fff;
+    --primary-btn-bg: #157FFC;
+    --primary-btn-color: #fff;
+    --bin-bg: #000000;
+    --bin-color: var(--primary-btn-color);
+    --badge-color: #fff;
+    --badge-bg: #3d9ff5;
+}
+
+
+.wrapper {
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--color);
+}
+
+.container {
+    align-items: center;
+}
+.navbar {
+    background-color: var(--header-bg);
+}
+
+.nav-link, .navbar-brand{
+    color: var(--header-color) !important;
+}
+
+.nav-link:hover, .navbar-brand:hover{
+    color: hsl(from var(--header-color) h s calc(l - 10)) !important;
+}
+
+.navbar .title {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.cards-wrapper {
+    width: 80%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 25%));
+    gap: 25px;
+}
+
+.custom-navar {
+    color: #fff !important;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-style: normal;
+    font: 14px / 28px DIN Condensed, sans-serif;
+  }
+
+  .card {
+    width: 250px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border-color);
+    border-radius: 20px; /* округлённые углы для карточек */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* легкая тень */
+}
+
+
+ .card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card .card-body .card-info {
+    margin-bottom: 25px;
+}
+
+.cards-wrapper {
+    display: flex;
+    justify-content: center; /* Центрирование карточек по горизонтали */
+    flex-wrap: wrap; /* Обёртка для нескольких строк */
+    gap: 25px; /* Расстояние между карточками */
+    margin-top: 20px; /* Добавляем отступ сверху для лучшего внешнего вида */
+}
+
+.cards-wrapper .card {
+    flex: 1 1 calc(50% - 30px); /* Адаптивная ширина карточек */
+    max-width: 300px; /* Максимальная ширина карточки */
+}
+
+.horizontal-form-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 100px; /* Расстояние между элементами */
+}
+
+.last-item {
+    margin-left: auto; /* Сдвигает последний элемент вправо */
+}
+
+.horizontal-form-group .form-group {
+    flex: 1;
+}
+
+.card img {
+    height: 300px;
+    width: 100%;
+    border-radius: 20px; 
+    margin: auto;
+    padding: 0px 0;
+}
+
+.card img {
+    height: 300px;
+    width: 100%;
+    border-radius: 10px; 
+    margin: auto;
+    padding: 0px 0;
+}
+.custom-height-img {
+    width: 100%;      /* Ширина изображения будет автоматически подстраиваться */
+    height: 100%;       /* Высота изображения будет равна высоте контейнера */
+    object-fit: cover;  /* Обрезать изображение по ширине, сохраняя пропорции */
+    padding: 0;         /* Убираем отступы */
+}
+
+.ship-preview {
+    width: 100%;
+    height: 250px !important;
+    background-size: cover;
+}
+
+.custom-card {
+    height: 300px ; 
+}
+
+.ship-image {
+    width: 100%;
+}
+
+.custom-inf-card-style {
+    padding-top: 30px !important;
+    padding-left: 50px !important; 
+}
+
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 25px 0;
+}
+
+
+
+.btn.btn-primary:hover {
+    background-color: #fff !important;
+    color: #000 !important;
+    
+    
+}
+.btn {
+    display: flex;
+    justify-content: center; /* Центрируем текст по горизонтали */
+    align-items: center; /* Центрируем текст по вертикали */
+    height: 40px; /* Фиксируем высоту кнопки для симметрии */
+    padding: 0 15px; /* Добавляем немного отступов */
+    
+    
+}
+.btn-primary {
+    background-color: var(--primary-btn-bg);
+    color: var(--primary-btn-color);
+    border: none;
+    border-radius: 50px !important;
+    padding: 8px 500px;
+    position: relative;
+    
+}
+
+
+.badge { 
+    position: absolute;
+    top: -10px;
+    right: -15px;
+    color: var(--badge-color);
+    background-color: #2683e68f;
+    border-radius: 50%;
+    padding: 5px 10px;
+    
+}
+
+
+.custom-form-control2 {
+    width: 200px !important;
+}
+
+.custom-btn-form {
+    width: 50px !important;
+
+}
+
+.justify-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card .form-group {
+    margin-bottom: 25px;
+}
+
+.ship-page img {
+    width: 80%;
+}
+
+.btn-primary {
+    background-color: var(--primary-btn-bg) !important;
+    border-color: var(--primary-btn-bg) !important;
+    color: var(--primary-btn-color) !important;
+    border-radius: 50px; /* небольшая округлённость для кнопок */
+}
+
+.btn-primary:hover {
+    background-color: #2d81e0 !important; /* темнее при наведении */
+    color: #fff !important;
+}
+
+.search-bar input {
+    border: 1px solid #d1d5db;
+    border-radius: 50px;
+    padding: 8px 12px;
+    width: 270px;
+}
+
+.search-bar button {
+    background-color: var(--primary-btn-bg);
+    color: var(--primary-btn-color);
+    border: none;
+    border-radius: 50px;
+    padding: 8px 16px;
+    
+}
+
+
+.card-btns {
+    display: flex;
+    justify-content: center;
+}
+
+.card-btns .btn {
+    width: 500%;
+}

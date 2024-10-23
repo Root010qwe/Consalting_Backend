@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <main class="container ship-page">
+
+        <div class="row">
+            <div class="col-6">
+                <img src="{{ service.image }}" class="ship-image" alt=""/>
+            </div>
+            <div class="col-6 d-flex flex-md-column gap-md-3">
+
+                <h1>{{ service.name }}</h1>
+                <p>{{ service.description }}</p>
+                <p>Время выполнения: {{ service.duration }}</p>
+                <p>Цена: {{ service.price }}</p>
+                <p>Дата начала: {{ service.production_date }}</p>
+
+            </div>
+        </div>
+
+    </main>
+{% endblock content %}

@@ -1,0 +1,55 @@
+{% load static %}
+
+
+{% if "http://localhost:8000/flights/" in request.build_absolute_uri %}
+
+    <div class="card w-100 mb-2 custom-card">
+         <div class="row g-0">
+            <div class="col-md-6 d-flex justify-center custom-height-img">
+                <img src="{{ service.image }}">
+            </div>
+            <div class="col-md-6 custom-inf-card-style">
+                <div class="card-body">
+                    <h5 class="card-title">{{ service.name }} </h5>
+                    <p class="card-text">Время выполнения: {{ service.start_date }}</p>
+                    <div class="form-group">
+                        <label class="form-label">Стоимость (руб):</label>
+                        <input disabled type="number" class="form-control custom-form-control2" value={{ service.price }}>
+                    </div>
+                    <a href="/services/{{ service.id }}/" class="btn btn-primary custom-btn-form">
+                        Подробнее
+                    </a>
+                </div>
+            </div>
+         </div>
+    </div>
+
+{% else %}
+
+    <div class="card">
+
+        <img src="{{ service.image }}" class="ship-preview" alt=""/>
+
+        <div class="card-body" >
+
+            <div class="card-info">
+
+                <h5 class="card-title">{{ service.name }}</h5>
+
+                <p class="card-text">Время выполнения: {{ service.start_date }}</p>
+
+            </div>
+
+            <div class="card-btns">
+
+                <a href="/services/{{ service.id }}/" class="btn btn-primary center">
+                    Подробнее
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endif %}

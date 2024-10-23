@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <main class="container">
+
+        <div class="row d-flex justify-content-between">
+
+            <div class="col md-8">
+                <form class="search-bar" action="/" method="GET">
+
+                    <div class="row">
+
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" placeholder="Введите название услуги" name="name" value="{{ name }}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <button type="submit" class="bin btn btn-primary w-100">Поиск</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col md-4 justify-end">
+                {% if draft_application.id %}
+                    <a href="/applications/{{ draft_application.id }}/" class="w-25">
+                        <button type="submit" class="bin btn btn-primary position-relative">
+                            Корзина
+                            <div class="badge position-absolute badge rounded-pill">
+                                {{ services_count }}
+                            </div>
+                        </button>
+                    </a>
+                {% else %}
+                    <p>Корзина пуста</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="cards-wrapper">
+
+            {% for service in services %}
+
+                <div class="card">
+                    <img src="{{ service.image }}" class="ship-preview" alt=""/>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ service.name }}</h5>
+                        <p class="card-text">Время выполнения: {{ service.duration }}</p>
+                        <a href="/services/{{ service.id }}/" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+{% endblock content %}

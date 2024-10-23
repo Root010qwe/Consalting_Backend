@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <main class="container">
+        <h3 class="text-center">Черновая заявка на консалтинг</h3>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Время выполнения:</label>
+                    <input type="text" class="form-control custom-form-control" placeholder="Введите дату начала">
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-wrapper d-flex justify-content-center">
+            {% for service in application.services %}
+                {% include "ship_card.html" %}
+            {% endfor %}
+        </div>
+    </main>
+{% endblock content %}
