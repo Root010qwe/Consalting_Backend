@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block page %}
+    <div class="services_with_search">
+        <form class="search_bar" method="get">
+            <input class="filter_text" placeholder="{{ filter }}" name="service_name" type="search">
+            <input class="button search_btn" type="submit" value="Поиск">
+        </form>
+        <div class="services_container">
+            {% for service in services %}
+                {% include 'service_card.html' with service=service %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="request_card_container">
+        {% include 'request_card.html' with report=currentRequest count=count %}
+    </div>
+{% endblock %}
