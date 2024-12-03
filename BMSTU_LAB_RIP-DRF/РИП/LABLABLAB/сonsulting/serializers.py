@@ -20,7 +20,7 @@ class RequestSerializer(serializers.ModelSerializer):
             'status',
             'creation_date',
             'completion_date',
-            'manager_username'
+            'manager_username',
             'total_cost',
         ]
 

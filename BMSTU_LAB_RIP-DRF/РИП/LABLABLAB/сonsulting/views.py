@@ -36,11 +36,28 @@ minio_client = Minio(
 BUCKET_NAME = 'images'
 
 
+class ObjectDoesNotExist:
+    pass
+
+
+class UserSingleton:
+    _instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            try:
+                cls._instance = User.objects.get(id=1)
+            except ObjectDoesNotExist:
+                cls._instance = None
+        return cls._instance
+
 # Методы услуг
 class ServiceListView(APIView):
-    permission_classes = [IsAuthenticated]  # Только авторизованные пользователи
+    permission_classes = [AllowAny]  # Только авторизованные пользователи
 
     def get(self, request):
+        user = UserSingleton.get_instance()
         # Получаем значение параметра name из запроса
         name_filter = request.query_params.get('name', None)
 
@@ -53,7 +70,7 @@ class ServiceListView(APIView):
 
         # Получаем черновую заявку текущего пользователя
         draft_request = ConsultingRequest.objects.filter(
-            status="Draft", manager=request.user
+            status="Draft", manager=user
         ).first()
 
         # Формируем ответ с аннотацией о количестве услуг в черновой заявке
@@ -79,11 +96,13 @@ class ServiceDetailView(APIView):
 
 class ServiceCreateView(APIView):
     def post(self, request):
+        user = UserSingleton.get_instance()
         serializer = ServiceSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save()  # Поле `manager` убрано, т.к. оно отсутствует в модели
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class ServiceUpdateView(APIView):
@@ -106,9 +125,10 @@ class ServiceDeleteView(APIView):
 
 class AddServiceToDraftRequestView(APIView):
     def post(self, request, pk):
+        user = UserSingleton.get_instance()
         service = get_object_or_404(ConsultingService, pk=pk)
         draft_request, created = ConsultingRequest.objects.get_or_create(
-            status="Draft", client_name="Guest"
+            status="Draft", manager=user, defaults={"client_name": "Guest"}
         )
         service_request, created = ServiceRequest.objects.get_or_create(
             request=draft_request, service=service
@@ -117,6 +137,7 @@ class AddServiceToDraftRequestView(APIView):
             service_request.quantity += 1
             service_request.save()
         return Response(ServiceRequestSerializer(service_request).data)
+
 
 class AddImageToServiceView(APIView):
     def post(self, request, service_id):
@@ -162,24 +183,20 @@ class AddImageToServiceView(APIView):
 # Методы заявок
 class RequestListView(APIView):
     def get(self, request):
+        user = UserSingleton.get_instance()
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        status = request.query_params.get('status')
+        status_filter = request.query_params.get('status')
 
-        # Исключаем удаленные и черновые заявки
-        requests = ConsultingRequest.objects.exclude(status__in=["Deleted", "Draft"])
+        requests = ConsultingRequest.objects.exclude(status__in=["Deleted", "Draft"]).filter(manager=user)
 
-        # Фильтрация по диапазону дат
         if start_date:
             requests = requests.filter(creation_date__gte=start_date)
         if end_date:
             requests = requests.filter(creation_date__lte=end_date)
+        if status_filter:
+            requests = requests.filter(status=status_filter)
 
-        # Фильтрация по статусу
-        if status:
-            requests = requests.filter(status=status)
-
-        # Возвращаем данные через сериализатор
         return Response(RequestSerializer(requests, many=True).data)
 
 
@@ -204,26 +221,22 @@ from django.utils.timezone import now
 
 
 class RequestFormView(APIView):
-
-
     def put(self, request, pk):
-        consulting_request = get_object_or_404(ConsultingRequest, pk=pk)
+        user = UserSingleton.get_instance()
+        consulting_request = get_object_or_404(ConsultingRequest, pk=pk, manager=user)
 
-        # Проверка на статус "Draft"
         if consulting_request.status != "Draft":
             return Response(
                 {"error": "Only draft requests can be formed."},
                 status=status.HTTP_405_METHOD_NOT_ALLOWED
             )
 
-        # Проверка обязательных полей
         if not consulting_request.client_name:
             return Response(
                 {"error": "Client name is required to form the request."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Обновление заявки
         consulting_request.status = "Submitted"
         consulting_request.creation_date = now()
         consulting_request.save()
@@ -238,37 +251,31 @@ class RequestFormView(APIView):
         )
 
 
+
 class RequestCompleteOrRejectView(APIView):
-
     def put(self, request, pk):
-        consulting_request = get_object_or_404(ConsultingRequest, pk=pk)
+        user = UserSingleton.get_instance()
+        consulting_request = get_object_or_404(ConsultingRequest, pk=pk, manager=user)
 
-        # Получение статуса из запроса
         status_value = request.data.get('status')
-
-        # Проверка допустимых статусов
         if status_value not in ["Completed", "Rejected"]:
             return Response(
                 {"error": "Invalid status. Allowed values are 'Completed' or 'Rejected'."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Проверка текущего статуса заявки
         if consulting_request.status != "Submitted":
             return Response(
                 {"error": "Only requests with 'Submitted' status can be completed or rejected."},
                 status=status.HTTP_405_METHOD_NOT_ALLOWED
             )
 
-        # Если статус "Completed", вычисляем итоговую стоимость
         if status_value == "Completed":
             total_cost = ServiceRequest.objects.filter(request=consulting_request).aggregate(
                 total=Sum(F('service__price') * F('quantity'))
-            )['total'] or 0  # Убедитесь, что значение по умолчанию — 0, если результат None
-
+            )['total'] or 0
             consulting_request.total_cost = total_cost
 
-        # Обновление заявки
         consulting_request.status = status_value
         consulting_request.completion_date = now()
         consulting_request.save()
@@ -284,23 +291,18 @@ class RequestCompleteOrRejectView(APIView):
         )
 
 
-class RequestDeleteView(APIView):
-    """
-    DELETE: Удаляет заявку, если она находится в статусе 'Draft'.
-    Изменяет статус заявки на 'Deleted'.
-    """
-    def delete(self, request, pk):
-        # Получаем заявку по ID
-        consulting_request = get_object_or_404(ConsultingRequest, pk=pk)
 
-        # Проверяем статус заявки
+class RequestDeleteView(APIView):
+    def delete(self, request, pk):
+        user = UserSingleton.get_instance()
+        consulting_request = get_object_or_404(ConsultingRequest, pk=pk, manager=user)
+
         if consulting_request.status != "Draft":
             return Response(
                 {"error": "Only draft requests can be deleted."},
                 status=status.HTTP_405_METHOD_NOT_ALLOWED
             )
 
-        # Устанавливаем статус на 'Deleted'
         consulting_request.status = "Deleted"
         consulting_request.save()
 
@@ -312,6 +314,7 @@ class RequestDeleteView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
 
 
 # Методы пользователей
@@ -339,7 +342,7 @@ class UserUpdateView(APIView):
     permission_classes = [IsAuthenticated]  # Только для авторизованных пользователей
 
     def put(self, request, *args, **kwargs):
-        user = request.user  # Получаем текущего пользователя
+        user = UserSingleton.get_instance()  # Получаем текущего пользователя
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             try:
