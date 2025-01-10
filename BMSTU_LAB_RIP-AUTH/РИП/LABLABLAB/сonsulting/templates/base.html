@@ -1,0 +1,22 @@
+
+<!doctype html>
+<html lang="ru" class="site">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <meta charset="utf-8">
+    <title>Консалтинг по ИТ-безопасности</title>
+</head>
+<body>
+<header class="header">
+    <div class="header_logo">
+        <a class="header_logo" href="{% url 'services_page' %}">
+            <span id="header_logo_text">Консалтинг по ИТ-безопасности</span>
+        </a>
+    </div>
+</header>
+<div class="page_container">
+    {% block page %}{% endblock %}
+</div>
+</body>
+</html>
