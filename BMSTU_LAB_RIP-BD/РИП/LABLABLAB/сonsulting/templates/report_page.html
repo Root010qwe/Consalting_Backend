@@ -56,5 +56,10 @@
         {% csrf_token %}
         <button type="submit" class="button delete_request_button">Удалить заявку</button>
     </form>
+
+    <!-- Новая кнопка для перехода на страницу со всеми заявками -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'all_requests' %}" class="button">Все заявки</a>
+    </div>
 </div>
 {% endblock %}

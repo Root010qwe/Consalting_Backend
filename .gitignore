@@ -1,0 +1,11 @@
+.venv/
+.idea/
+db.sqlite3
+app/__pycache__/
+rip/__pycache__/
+app/migrations/__pycache__/
+LR4_1/
+
+*/BMSTU_LAB_RIP-AUTH/*
+
+

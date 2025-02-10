@@ -115,3 +115,8 @@ def delete_service_from_request(request, service_request_id):
 
 def custom_404(request, exception):
     return render(request, '404.html', status=404)
+
+def all_requests(request):
+    # Получаем все заявки, отсортированные по дате создания (сначала новые)
+    requests_list = ConsultingRequest.objects.all().order_by('-creation_date')
+    return render(request, 'all_requests.html', {'requests': requests_list})

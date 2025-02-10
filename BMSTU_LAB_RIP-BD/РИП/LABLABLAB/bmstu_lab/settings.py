@@ -77,11 +77,11 @@ WSGI_APPLICATION = 'bmstu_lab.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ssbd',
+        'NAME': 'lr2',
         'USER': 'marat',
         'PASSWORD': 'qwe123',
-        'HOST': 'localhost',
-        'PORT': 32768,
+        'HOST': '91.135.156.74',
+        'PORT': 5432,
     }
 }
 

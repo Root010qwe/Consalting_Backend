@@ -31,5 +31,6 @@ urlpatterns = [
     path('delete-service/<int:service_request_id>/', views.delete_service_from_request,name='delete_service_from_request'),
     path('delete-report/<int:report_id>/', views.delete_report, name='delete_report'),
     path('delete-request/<int:request_id>/', views.delete_request, name='delete_request'),
+    path('all-requests/', views.all_requests, name='all_requests'),
 ]
 
