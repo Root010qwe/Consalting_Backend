@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block page %}
+<div class="description-container">
+    <div class="image-section">
+        <img src="{{ service.image_url }}" alt="{{ service.name }}" class="description-image">
+    </div>
+    <div class="details-section">
+        <h1 class="service-name">{{ service.name }}</h1>
+        <p class="service-description">{{ service.description }}</p>
+        <div class="additional-info">
+            <p><strong>Цена:</strong> {{ service.price }} руб.</p>
+            <p><strong>Длительность:</strong> {{ service.duration }} часов</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
